@@ -1,6 +1,3 @@
-Here is a concise and well-structured `README.md` for your project:
-
-```markdown
 # BookBear
 
 BookBear is a Django-based API for managing books, authors, publishers, genres, and user interactions. It provides features for user authentication, book reviews, and managing relationships between users and entities like authors, publishers, and genres.
@@ -95,5 +92,3 @@ python manage.py test
 
 This project is licensed under the MIT License.
 ```
-
-This `README.md` provides a quick overview of the project, its features, and setup instructions.
