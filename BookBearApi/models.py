@@ -3,33 +3,6 @@ from django.contrib.auth.models import AbstractUser, PermissionsMixin
 
 
 # Create your models here.
-
-# Choices
-class Gender(models.TextChoices):
-    NOT_SPECIFIED = 'X', 'Not specified'
-    MALE_CIS = 'MC', 'Male Cisgender'
-    FEMALE_CIS = 'FC', 'Female Cisgender'
-    MALE_TRANS = 'MT', 'Male Transgender'
-    FEMALE_TRANS = 'FT', 'Female Transgender'
-    NON_BINARY = 'NB', 'Non-binary'
-    OTHER = 'O', 'Other'
-
-
-class AgeRating(models.TextChoices):
-    ALL_AGES = 'AA', 'All Ages'
-    TEEN = 'T', 'Teen'
-    MATURE = 'M', 'Mature'
-    ADULT = 'A', 'Adult'
-
-
-class Situation(models.TextChoices):
-    READING = 'R', 'Reading'
-    STOPPED = 'S', 'Stopped'
-    COMPLETED = 'C', 'Completed'
-    PENDING = 'P', 'Pending'
-
-
-# Models
 class Author(models.Model):
     avatar = models.ImageField(upload_to='authors', blank=True, null=True)
     name = models.CharField(max_length=250, unique=True)
@@ -46,27 +19,55 @@ class Genre(models.Model):
 
 
 class Book(models.Model):
+    # Age rating choices
+    EVERYONE = 'E'
+    TEEN = 'T'
+    MATURE = 'M'
+    ADULT = 'A'
+    AGE_RATING_CHOICES = {
+        EVERYONE: 'Everyone',
+        TEEN: 'Teen',
+        MATURE: 'Mature',
+        ADULT: 'Adult'
+    }
+
     title = models.CharField(max_length=250)
     publication_date = models.DateField()
     synopsis = models.TextField(blank=True)
-    score = models.FloatField()
-    # noinspection PyUnresolvedReferences
-    age_rating = models.CharField(max_length=2, choices=AgeRating.choices, default=AgeRating.ALL_AGES)
+    score = models.FloatField(default=0.0)
+    age_rating = models.CharField(max_length=2, choices=AGE_RATING_CHOICES, default=EVERYONE)
 
     cover = models.ImageField(upload_to='covers', blank=True, null=True)
 
-    publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True)
+    publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, blank=True, null=True)
     authors = models.ManyToManyField(Author, related_name='books')
     genres = models.ManyToManyField(Genre, related_name='books')
 
 
 class User(AbstractUser, PermissionsMixin):
+    # Gender choices
+    NOT_SPECIFIED = 'X'
+    MALE_CIS = 'MC'
+    FEMALE_CIS = 'FC'
+    MALE_TRANS = 'MT'
+    FEMALE_TRANS = 'FT'
+    NON_BINARY = 'NB'
+    OTHER = 'O'
+    GENDER_CHOICES = {
+        NOT_SPECIFIED: 'Not specified',
+        MALE_CIS: 'Male Cisgender',
+        FEMALE_CIS: 'Female Cisgender',
+        MALE_TRANS: 'Male Transgender',
+        FEMALE_TRANS: "Female Transgender",
+        NON_BINARY: 'Non-binary',
+        OTHER: 'Other'
+    }
+
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=250)
     summary = models.TextField(blank=True)
     birth_date = models.DateField()
-    # noinspection PyUnresolvedReferences
-    gender = models.CharField(max_length=2, choices=Gender.choices, default=Gender.NOT_SPECIFIED)
+    gender = models.CharField(max_length=2, choices=GENDER_CHOICES, default=NOT_SPECIFIED)
 
     avatar = models.ImageField(upload_to='avatars', blank=True, null=True)
 
@@ -79,14 +80,27 @@ class User(AbstractUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['username', 'birth_date', 'gender']
 
 
 class UserBook(models.Model):
+    # Situation choices
+    READING = 'R'
+    STOPPED = 'S'
+    COMPLETED = 'C'
+    PENDING = 'P'
+    ABANDONED = 'A'
+    SITUATION_CHOICES = {
+        READING: 'Reading',
+        STOPPED: 'Stopped',
+        COMPLETED: 'Completed',
+        PENDING: 'Pending',
+        ABANDONED: 'Abandoned'
+    }
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviewed_books')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
-    # noinspection PyUnresolvedReferences
-    situation = models.CharField(max_length=2, choices=Situation.choices, default=Situation.READING)
+    situation = models.CharField(max_length=2, choices=SITUATION_CHOICES, default=PENDING)
     rating = models.FloatField(null=True, blank=True)
     review = models.TextField(blank=True)
     date_added = models.DateField(auto_now_add=True)

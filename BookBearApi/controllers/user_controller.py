@@ -193,3 +193,4 @@ class UserController(ControllerBase):
         publisher = await aget_object_or_404(Publisher, id=publisher_id)
         await publisher.followers.remove(user)
         return user
+

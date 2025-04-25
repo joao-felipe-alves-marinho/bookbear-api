@@ -25,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@rg+mfpp+diyoyb3#*0@hzi2(nk6@mf5v_sy_2kf4@8y3&w$2x'
+SECRET_KEY = os.getenv('SECRET_KEY', 'change_this_to_a_random_secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.getenv('DEBUG', '1')))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1').split(',')
 
 # Application definition
 
@@ -127,47 +127,33 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'BookBearApi.User'
 
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:5173').split(',')
+CORS_ALLOW_CREDENTIALS = bool(int(os.getenv('CORS_ALLOW_CREDENTIALS', '1')))
+
 AUTH_JWT_ACCESS_TOKEN_LIFETIME = timedelta(
-    minutes=int(os.getenv('AUTH_JWT_ACCESS_TOKEN_LIFETIME', '5'))
+    days=int(os.getenv('AUTH_JWT_ACCESS_TOKEN_LIFETIME', '3'))
 )
 AUTH_JWT_REFRESH_TOKEN_LIFETIME = timedelta(
-    days=int(os.getenv('AUTH_JWT_REFRESH_TOKEN_LIFETIME', '1'))
+    days=int(os.getenv('AUTH_JWT_REFRESH_TOKEN_LIFETIME', '7'))
 )
 
-SECURE_REFRESH_TOKEN = bool(
-    strtobool(os.getenv('SECURE_REFRESH_TOKEN', 'false'))
-)
-REFRESH_TOKEN_ON_COOKIE = bool(
-    strtobool(os.getenv('REFRESH_TOKEN_ON_COOKIE', 'false'))
-)
-REFRESH_TOKEN_COOKIE_SAMESITE = os.getenv(
-    'REFRESH_TOKEN_COOKIE_SAMESITE', 'None'
-)
-REFRESH_TOKEN_COOKIE_SECURE = bool(
-    strtobool(os.getenv('REFRESH_TOKEN_COOKIE_SECURE', 'true'))
-)
-
-AUTH_PASSWORD_RESET_URL = os.getenv(
-    'AUTH_PASSWORD_RESET_URL',
-    "http://localhost:8000/auth/reset-password"
-)
-AUTH_USER_SCHEMA = os.getenv(
-    'AUTH_USER_SCHEMA',
-    'conexao_digital_api.schemas.user_schemas.UserSchema'
-)
+SECURE_REFRESH_TOKEN = bool(int(os.getenv('SECURE_REFRESH_TOKEN', '0')))
+REFRESH_TOKEN_ON_COOKIE = bool(int(os.getenv('REFRESH_TOKEN_ON_COOKIE', '0')))
+REFRESH_TOKEN_COOKIE_SAMESITE = os.getenv('REFRESH_TOKEN_COOKIE_SAMESITE', 'None')
+REFRESH_TOKEN_COOKIE_SECURE = bool(int(os.getenv('REFRESH_TOKEN_COOKIE_SECURE', '1')))
 
 if REFRESH_TOKEN_ON_COOKIE:
     AUTH_JWT_PAIR_SCHEMA = os.getenv(
         'AUTH_JWT_PAIR_SCHEMA',
-        'conexao_digital_api.schemas.user_schemas.CustomTokenPairInputSchema'
+        'BookBearApi.schemas.CustomTokenPairInputSchema'
     )
 
-EMAIL_BACKEND = os.getenv(
-    'EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend'
-)
+AUTH_PASSWORD_RESET_URL = os.getenv('AUTH_PASSWORD_RESET_URL', 'http://localhost:8000/reset-password')
+
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = os.getenv('EMAIL_HOST', '')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '25'))
-EMAIL_USE_TLS = bool(strtobool(os.getenv('EMAIL_USE_TLS', 'false')))
-EMAIL_USE_SSL = bool(strtobool(os.getenv('EMAIL_USE_SSL', 'false')))
+EMAIL_USE_TLS = bool(int(os.getenv('EMAIL_USE_TLS', '0')))
+EMAIL_USE_SSL = bool(int(os.getenv('EMAIL_USE_SSL', '0')))
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'dev@dev.com')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'dev')

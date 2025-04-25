@@ -1,6 +1,7 @@
 from typing import List
 
 from django.shortcuts import aget_object_or_404
+from ninja_extra.ordering import ordering, Ordering
 from ninja_extra import (
     api_controller,
     ControllerBase,
@@ -14,6 +15,7 @@ from BookBearApi.schemas import BookSchema
 @api_controller('/book', tags=['book'], permissions=[permissions.AllowAny], auth=None)
 class BookController(ControllerBase):
     @route.get('/', response=List[BookSchema])
+    @ordering(Ordering, ordering_fields=['title', 'publication_date', 'score'])
     async def list_books(self):
         """
         List all books.

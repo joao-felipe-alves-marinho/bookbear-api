@@ -16,9 +16,7 @@ from BookBearApi.models import Author, Publisher, Genre, Book, User, UserBook
 
 
 class UniqueNameMixin:
-    class Config:
-        model: Any
-
+    # noinspection PyUnresolvedReferences
     @classmethod
     @model_validator('name')
     def validate_unique_name(cls, value: str) -> str:
@@ -28,10 +26,21 @@ class UniqueNameMixin:
         return value
 
 
+class UniqueEmailMixin:
+    # noinspection PyUnresolvedReferences
+    @classmethod
+    @model_validator('email')
+    def validate_email(cls, value):
+        if User.objects.filter(email=value).exclude(id=cls.instance.id).exists():
+            raise ValueError('Email already exists')
+        validate_email(value)
+        return value
+
+
 # ---------------------------------------------------------------
 
 class AuthorSchema(ModelSchema):
-    avatar: str = None
+    avatar: Optional[str] = None
     books: List['BookRelationshipSchema'] = None
     followers: List['UserRelationshipSchema'] = None
 
@@ -46,15 +55,17 @@ class CreateAuthorSchema(ModelSchema, UniqueNameMixin):
         include = ['name', 'birth_date']
 
 
-class UpdateAuthorSchema(CreateAuthorSchema):
-    class Config(CreateAuthorSchema.Config):
+class UpdateAuthorSchema(ModelSchema):
+    class Config:
+        model = Author
+        include = ['name', 'birth_date']
         optional = '__all__'
 
 
 # ---------------------------------------------------------------
 
 class PublisherSchema(ModelSchema):
-    logo: str = None
+    logo: Optional[str] = None
     books: List['BookRelationshipSchema'] = None
     followers: List['UserRelationshipSchema'] = None
 
@@ -69,9 +80,11 @@ class CreatePublisherSchema(ModelSchema, UniqueNameMixin):
         include = ['name']
 
 
-class UpdatePublisherSchema(CreatePublisherSchema):
-    class Config(CreatePublisherSchema.Config):
-        optional = '__all__'
+class UpdatePublisherSchema(ModelSchema):
+    class Config:
+        model = Publisher
+        include = ['name']
+        optional = ['name']
 
 
 # ---------------------------------------------------------------
@@ -90,9 +103,11 @@ class CreateGenreSchema(ModelSchema, UniqueNameMixin):
         model = Genre
 
 
-class UpdateGenreSchema(CreateGenreSchema):
-    class Config(CreateGenreSchema.Config):
-        optional = '__all__'
+class UpdateGenreSchema(ModelSchema):
+    class Config:
+        model = Genre
+        include = ['name']
+        optional = ['name']
 
 
 # ---------------------------------------------------------------
@@ -100,15 +115,16 @@ class UpdateGenreSchema(CreateGenreSchema):
 class BookSchema(ModelSchema):
     authors: List[AuthorSchema] = None
     genres: List[GenreSchema] = None
-    publisher: PublisherSchema = None
+    publisher: Optional[PublisherSchema] = None
     reviews: List['ReviewBookSchema'] = None
 
-    cover: str = None
+    cover: Optional[str] = None
 
-    class Config:
+    class Config(Schema.Config):
         model = Book
         include = ['id', 'title', 'publication_date', 'synopsis', 'score', 'age_rating', 'publisher', 'authors',
                    'genres']
+        use_enum_values = True
 
 
 class CreateBookSchema(ModelSchema):
@@ -118,8 +134,10 @@ class CreateBookSchema(ModelSchema):
         optional = ['synopsis', 'publisher', 'authors', 'genres']
 
 
-class UpdateBookSchema(CreateBookSchema):
-    class Config(CreateBookSchema.Config):
+class UpdateBookSchema(ModelSchema):
+    class Config:
+        model = Book
+        include = ['title', 'publication_date', 'synopsis', 'age_rating', 'publisher', 'authors', 'genres']
         optional = '__all__'
 
 
@@ -131,38 +149,24 @@ class UserSchema(ModelSchema):
     followed_publishers: List[PublisherSchema] = None
     favorite_genres: List[GenreSchema] = None
 
-    avatar: str = None
+    avatar: Optional[str] = None
 
     class Config:
         model = User
         include = ['id', 'username', 'email', 'birth_date', 'gender', 'summary']
 
 
-class CreateUserSchema(ModelSchema):
+class CreateUserSchema(ModelSchema, UniqueEmailMixin):
     class Config:
         model = User
         include = ['username', 'email', 'password', 'birth_date', 'gender', 'summary']
 
-    @classmethod
-    @model_validator('email')
-    def validate_email(cls, value):
-        if User.objects.filter(email=value).exists():
-            raise ValueError('Email already exists')
-        validate_email(value)
-        return value
 
-
-class UpdateUserSchema(CreateUserSchema):
-    class Config(CreateUserSchema.Config):
+class UpdateUserSchema(ModelSchema, UniqueEmailMixin):
+    class Config:
+        model = User
+        include = ['username', 'email', 'birth_date', 'gender', 'summary']
         optional = '__all__'
-
-    @classmethod
-    @model_validator('email')
-    def validate_email(cls, value):
-        if User.objects.filter(email=value).exclude(id=cls.instance.id).exists():
-            raise ValueError('Email already exists')
-        validate_email(value)
-        return value
 
 
 # ---------------------------------------------------------------

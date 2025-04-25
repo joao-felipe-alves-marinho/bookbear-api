@@ -14,7 +14,8 @@ from ninja_extra import (
 from BookBearApi.models import User, Book, UserBook, Genre, Author, Publisher
 from BookBearApi.schemas import UserSchema, UpdateUserSchema, BookRelationshipSchema, UserBookSchema, \
     CreateUserBookSchema, UpdateUserBookSchema, BookSchema, CreateBookSchema, AuthorSchema, CreateAuthorSchema, \
-    PublisherSchema, GenreSchema, CreateGenreSchema, UpdateBookSchema, UpdateAuthorSchema
+    PublisherSchema, GenreSchema, CreateGenreSchema, UpdateBookSchema, UpdateAuthorSchema, CreatePublisherSchema, \
+    UpdatePublisherSchema
 
 
 @api_controller('/admin', tags=['admin'], permissions=[permissions.IsAdminUser])
@@ -147,16 +148,77 @@ class AdminController(ControllerBase):
         await author.adelete()
         return HTTPStatus.NO_CONTENT, None
 
+    @route.get('/publisher', response=List[PublisherSchema])
+    async def list_publishers(self):
+        """
+        List all publishers.
+        :return: List[PublisherSchema]
+        """
+        return [publisher async for publisher in Publisher.objects.all()]
+
     @route.post('/publisher', response={201: PublisherSchema})
-    async def create_publisher(self, payload: PublisherSchema, logo: File[UploadedFile] = None):
+    async def create_publisher(self, payload: CreatePublisherSchema, logo: File[UploadedFile] = None):
         """
         Create a publisher.
-        :param payload: PublisherSchema
+        :param payload: CreatePublisherSchema
         :param logo: File[UploadedFile]
         :return: PublisherSchema
         """
         publisher = await Publisher.objects.acreate(logo=logo, **payload.dict(exclude_unset=True))
         return HTTPStatus.CREATED, publisher
+
+    @route.patch('/publisher/{publisher_id}', response=PublisherSchema)
+    async def update_publisher(self, publisher_id: int, payload: UpdatePublisherSchema):
+        """
+        Update a publisher.
+        :param publisher_id: int
+        :param payload: UpdatePublisherSchema
+        :return: PublisherSchema
+        """
+        publisher = await aget_object_or_404(Publisher, id=publisher_id)
+        for attr, value in payload.dict(exclude_unset=True).items():
+            setattr(publisher, attr, value)
+        await publisher.asave()
+        return publisher
+
+    @route.post('/publisher/{publisher_id}/logo', response=PublisherSchema)
+    async def upload_logo(self, publisher_id: int, logo: File[UploadedFile]):
+        """
+        Upload a logo for a publisher.
+        :param publisher_id: int
+        :param logo: File[UploadedFile]
+        :return: PublisherSchema
+        """
+        publisher = await aget_object_or_404(Publisher, id=publisher_id)
+        await sync_to_async(publisher.logo.delete)()
+        publisher.logo = logo
+        await publisher.asave()
+        return publisher
+
+    @route.delete('/publisher/{publisher_id}/logo', response=PublisherSchema)
+    async def delete_logo(self, publisher_id: int):
+        """
+        Delete a logo for a publisher.
+        :param publisher_id: int
+        :return: PublisherSchema
+        """
+        publisher = await aget_object_or_404(Publisher, id=publisher_id)
+        await sync_to_async(publisher.logo.delete)()
+        publisher.logo = None
+        await publisher.asave()
+        return publisher
+
+    @route.delete('/publisher/{publisher_id}', response={204: None})
+    async def delete_publisher(self, publisher_id: int):
+        """
+        Delete a publisher.
+        :param publisher_id: int
+        :return: PublisherSchema
+        """
+        publisher = await aget_object_or_404(Publisher, id=publisher_id)
+        await sync_to_async(publisher.logo.delete)()
+        await publisher.adelete()
+        return HTTPStatus.NO_CONTENT, None
 
     @route.post('/genre', response={201: GenreSchema})
     async def create_genre(self, payload: CreateGenreSchema):
