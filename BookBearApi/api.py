@@ -3,7 +3,8 @@ from ninja_extra import (
 )
 
 from .async_auth import AsyncJWTAuth
-from .controllers import AsyncNinjaAuthJWTController, UserController, BookController, AdminController
+from .controllers import AsyncNinjaAuthJWTController, UserController, BookController, AdminController, \
+    PublisherController, GenreController, AuthorController
 
 api = NinjaExtraAPI(
     version='1.0.0',
@@ -15,6 +16,9 @@ api = NinjaExtraAPI(
 api.register_controllers(
     AsyncNinjaAuthJWTController,
     UserController,
+    AuthorController,
+    PublisherController,
+    GenreController,
     BookController,
     AdminController
 )

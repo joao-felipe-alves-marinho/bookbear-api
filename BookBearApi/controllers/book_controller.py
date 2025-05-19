@@ -16,9 +16,9 @@ from BookBearApi.schemas import BookSchema
 class BookController(ControllerBase):
     @route.get('/', response=List[BookSchema])
     @ordering(Ordering, ordering_fields=['title', 'publication_date', 'score'])
-    async def list_books(self):
+    async def get_books(self):
         """
-        List all books.
+        Get a list of books.
         :return: List[BookSchema]
         """
         return [book async for book in Book.objects.all()]

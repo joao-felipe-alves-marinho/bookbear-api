@@ -9,7 +9,6 @@ from BookBearApi.schemas.validators_mixin import UniqueNameMixin
 
 class GenreSchema(ModelSchema):
     books: List['BookRelationshipSchema'] = None
-    users: List['UserRelationshipSchema'] = None
 
     class Config:
         model = Genre

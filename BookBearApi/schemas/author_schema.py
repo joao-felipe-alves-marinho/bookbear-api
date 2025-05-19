@@ -10,7 +10,6 @@ from BookBearApi.schemas.validators_mixin import UniqueNameMixin
 class AuthorSchema(ModelSchema):
     avatar: Optional[str] = None
     books: List['BookRelationshipSchema'] = None
-    followers: List['UserRelationshipSchema'] = None
 
     class Config:
         model = Author
