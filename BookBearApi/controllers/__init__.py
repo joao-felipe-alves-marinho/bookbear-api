@@ -1,4 +1,5 @@
 from .async_ninja_auth_jwt_controller import AsyncNinjaAuthJWTController
 from .user_controller import UserController
+from .author_controller import AuthorController
 from .book_controller import BookController
 from .admin_controller import AdminController

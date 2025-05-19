@@ -8,7 +8,7 @@ from .controllers import AsyncNinjaAuthJWTController, UserController, BookContro
 api = NinjaExtraAPI(
     version='1.0.0',
     title='BookBear API',
-    description='API para o projeto Conexao Digital',
+    description='API para o projeto BookBear',
     auth=AsyncJWTAuth()
 )
 

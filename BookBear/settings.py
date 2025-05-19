@@ -145,7 +145,7 @@ REFRESH_TOKEN_COOKIE_SECURE = bool(int(os.getenv('REFRESH_TOKEN_COOKIE_SECURE', 
 if REFRESH_TOKEN_ON_COOKIE:
     AUTH_JWT_PAIR_SCHEMA = os.getenv(
         'AUTH_JWT_PAIR_SCHEMA',
-        'BookBearApi.schemas.CustomTokenPairInputSchema'
+        'BookBearApi.schemas.custom_token_schemas.CustomTokenPairInputSchema'
     )
 
 AUTH_PASSWORD_RESET_URL = os.getenv('AUTH_PASSWORD_RESET_URL', 'http://localhost:8000/reset-password')
