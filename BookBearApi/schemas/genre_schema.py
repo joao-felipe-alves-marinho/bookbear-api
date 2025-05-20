@@ -1,9 +1,11 @@
-from typing import List
+from typing import List, Optional
 
+from ninja import FilterSchema
 from ninja_schema import ModelSchema
+from pydantic import Field
 
 from BookBearApi.models import Genre
-from BookBearApi.schemas.relationship_schema import BookRelationshipSchema, UserRelationshipSchema
+from BookBearApi.schemas.relationship_schema import BookRelationshipSchema
 from BookBearApi.schemas.validators_mixin import UniqueNameMixin
 
 
@@ -25,3 +27,10 @@ class UpdateGenreSchema(ModelSchema):
         model = Genre
         include = ['name']
         optional = ['name']
+
+
+class FilterGenreSchema(FilterSchema):
+    name: Optional[str] = Field(
+        None, description='Filter by genres name',
+        q='genre__name__icontains'
+    )

@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.db.models import Avg
-from .models import UserBook, Book
+from .models import UserBook
 
 @receiver([post_save, post_delete], sender=UserBook)
 async def update_book_score(sender, instance, **kwargs):

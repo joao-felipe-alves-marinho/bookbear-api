@@ -1,6 +1,8 @@
 from typing import Optional, List
 
+from ninja import FilterSchema
 from ninja_schema import ModelSchema
+from pydantic import Field
 
 from BookBearApi.models import Book
 from BookBearApi.schemas.user_schema import ReviewBookSchema
@@ -36,3 +38,40 @@ class UpdateBookSchema(ModelSchema):
         model = Book
         include = ['title', 'publication_date', 'synopsis', 'age_rating', 'publisher', 'authors', 'genres']
         optional = '__all__'
+
+
+class FilterBookSchema(FilterSchema):
+    title: Optional[str] = Field(
+        None, description='Filter books by title',
+        q='title__icontains'
+    )
+
+    publication_date: Optional[str] = Field(
+        None, description='Filter books by publication date',
+        q='publication_date__icontains'
+    )
+
+    score: Optional[float] = Field(
+        None, description='Filter books by score',
+        q='score__icontains'
+    )
+
+    age_rating: Optional[str] = Field(
+        None, description='Filter books by age rating',
+        q='age_rating__icontains'
+    )
+
+    publisher: Optional[str] = Field(
+        None, description='Filter books by publisher',
+        q='publisher__name__icontains'
+    )
+
+    authors: Optional[str] = Field(
+        None, description='Filter books by author',
+        q='authors__name__icontains'
+    )
+
+    genres: Optional[str] = Field(
+        None, description='Filter books by genre',
+        q='genres__name__icontains'
+    )

@@ -11,9 +11,8 @@ from ninja_extra import (
     permissions, route
 )
 
-from BookBearApi.models import User, Book, UserBook, Genre, Author, Publisher
-from BookBearApi.schemas import UserSchema, UpdateUserSchema, BookRelationshipSchema, UserBookSchema, \
-    CreateUserBookSchema, UpdateUserBookSchema, BookSchema, CreateBookSchema, AuthorSchema, CreateAuthorSchema, \
+from BookBearApi.models import Book, Genre, Author, Publisher
+from BookBearApi.schemas import BookSchema, CreateBookSchema, AuthorSchema, CreateAuthorSchema, \
     PublisherSchema, GenreSchema, CreateGenreSchema, UpdateBookSchema, UpdateAuthorSchema, CreatePublisherSchema, \
     UpdatePublisherSchema
 

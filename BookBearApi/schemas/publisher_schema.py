@@ -1,9 +1,11 @@
 from typing import Optional, List
 
+from ninja import FilterSchema
 from ninja_schema import ModelSchema
+from pydantic import Field
 
 from BookBearApi.models import Publisher
-from BookBearApi.schemas.relationship_schema import BookRelationshipSchema, UserRelationshipSchema
+from BookBearApi.schemas.relationship_schema import BookRelationshipSchema
 from BookBearApi.schemas.validators_mixin import UniqueNameMixin
 
 
@@ -27,3 +29,10 @@ class UpdatePublisherSchema(ModelSchema):
         model = Publisher
         include = ['name']
         optional = ['name']
+
+
+class FilterPublisherSchema(FilterSchema):
+    name: Optional[str] = Field(
+        None, description='Filter by publishers name',
+        q='publisher__name__icontains'
+    )

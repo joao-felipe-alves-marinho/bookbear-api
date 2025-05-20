@@ -1,6 +1,6 @@
-from typing import Optional, List, Any, Type, cast, Dict
+from typing import Optional, List
 
-from ninja_schema import ModelSchema, model_validator
+from ninja_schema import ModelSchema
 
 from BookBearApi.models import User, UserBook
 from BookBearApi.schemas.author_schema import AuthorSchema

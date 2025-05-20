@@ -1,6 +1,8 @@
 from typing import List
 
 from django.shortcuts import aget_object_or_404
+from ninja import Query
+from ninja.pagination import paginate
 from ninja_extra import (
     api_controller,
     ControllerBase,
@@ -8,18 +10,20 @@ from ninja_extra import (
 )
 
 from BookBearApi.models import Publisher
-from BookBearApi.schemas import PublisherSchema
+from BookBearApi.schemas import PublisherSchema, FilterPublisherSchema
+from BookBearApi.schemas.pagination_schema import AsyncPageNumberPagination
 
 
 @api_controller('/publisher', tags=['publisher'], permissions=[permissions.AllowAny], auth=None)
 class PublisherController(ControllerBase):
     @route.get('/', response=List[PublisherSchema])
-    async def get_publishers(self):
+    @paginate(AsyncPageNumberPagination)
+    async def get_publishers(self, filters: FilterPublisherSchema = Query(...)):
         """
         Get a list of publishers.
         :return: List[PublisherSchema]
         """
-        return [publisher async for publisher in Publisher.objects.all()]
+        return [publisher async for publisher in filters.filter(Publisher.objects.all())]
 
     @route.get('/{publisher_id}', response=PublisherSchema)
     async def get_publisher(self, publisher_id: int):
