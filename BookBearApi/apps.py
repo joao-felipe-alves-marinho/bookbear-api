@@ -6,4 +6,4 @@ class BookbearapiConfig(AppConfig):
     name = 'BookBearApi'
 
     def ready(self):
-        import BookBearApi.signals
+        pass

@@ -1,7 +1,6 @@
 import os
 from http import HTTPStatus
 
-from dotenv import load_dotenv
 from asgiref.sync import sync_to_async
 from dj_ninja_auth import app_settings
 from dj_ninja_auth.jwt.schema_control import JWTSchemaControl
@@ -10,7 +9,7 @@ from dj_ninja_auth.schema_control import SchemaControl
 from django.conf import settings
 from django.contrib.auth import alogin as django_alogin
 from django.contrib.auth import alogout as django_alogout
-
+from dotenv import load_dotenv
 from ninja import File
 from ninja.files import UploadedFile
 from ninja_extra import ControllerBase, api_controller, http_post, http_generic, route

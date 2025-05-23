@@ -1,8 +1,9 @@
 from typing import Any
 
 from django.db.models import QuerySet
-from ninja.pagination import AsyncPaginationBase
 from ninja import Field, Schema
+from ninja.pagination import AsyncPaginationBase
+
 
 class AsyncPageNumberPagination(AsyncPaginationBase):
     def paginate_queryset(self, queryset: QuerySet, pagination: Any, **params: Any) -> Any:

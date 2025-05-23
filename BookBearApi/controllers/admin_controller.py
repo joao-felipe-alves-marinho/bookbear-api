@@ -30,7 +30,8 @@ class AdminController(ControllerBase):
         publisher = await aget_object_or_404(Publisher, id=payload.publisher)
         book = await Book.objects.acreate(cover=cover,
                                           publisher=publisher,
-                                          **payload.dict(exclude_unset=True, exclude={'authors', 'genres', 'publisher'}))
+                                          **payload.dict(exclude_unset=True,
+                                                         exclude={'authors', 'genres', 'publisher'}))
         if payload.authors:
             authors = [author async for author in Author.objects.filter(id__in=payload.authors).all()]
             await book.authors.aadd(*authors)

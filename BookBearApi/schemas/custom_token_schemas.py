@@ -1,8 +1,8 @@
 from typing import Optional, Type, cast, Dict
 
 from dj_ninja_auth.jwt import app_settings
-from dj_ninja_auth.jwt.tokens import RefreshToken
 from dj_ninja_auth.jwt.schema import JWTTokenInputSchemaMixin
+from dj_ninja_auth.jwt.tokens import RefreshToken
 from dj_ninja_auth.schema import SuccessMessageMixin, LoginInputSchema
 from django.contrib.auth.models import update_last_login, AbstractUser
 from ninja import Schema

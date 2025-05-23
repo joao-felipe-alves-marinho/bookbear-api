@@ -3,12 +3,12 @@ from typing import List
 from django.shortcuts import aget_object_or_404
 from ninja import Query
 from ninja.pagination import paginate
-from ninja_extra.ordering import ordering, Ordering
 from ninja_extra import (
     api_controller,
     ControllerBase,
     route, permissions
 )
+from ninja_extra.ordering import ordering, Ordering
 
 from BookBearApi.models import Book
 from BookBearApi.schemas import BookSchema, FilterBookSchema

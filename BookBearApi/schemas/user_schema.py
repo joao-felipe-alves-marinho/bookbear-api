@@ -47,14 +47,14 @@ class CreateUserBookSchema(ModelSchema):
     class Meta:
         model = UserBook
         fields = ('situation', 'rating', 'review')
-        fields_optional  = ['rating', 'review']
+        fields_optional = ['rating', 'review']
 
 
 class UpdateUserBookSchema(ModelSchema):
     class Meta:
         model = UserBook
         fields = ('situation', 'rating', 'review')
-        fields_optional  = '__all__'
+        fields_optional = '__all__'
 
 
 class ReviewBookSchema(ModelSchema):

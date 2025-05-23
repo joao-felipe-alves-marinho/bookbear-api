@@ -1,16 +1,15 @@
 from typing import Any, Type
 
 from asgiref.sync import sync_to_async
-from django.contrib.auth import get_user_model
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.http import HttpRequest
-from django.contrib.auth.models import AnonymousUser
-from django.utils.module_loading import import_string
-from ninja_extra.security import AsyncHttpBearer
-
 from dj_ninja_auth.jwt import app_settings
 from dj_ninja_auth.jwt.exceptions import AuthenticationFailed, InvalidToken, TokenError
 from dj_ninja_auth.jwt.tokens import Token
+from django.contrib.auth import get_user_model
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import AnonymousUser
+from django.http import HttpRequest
+from django.utils.module_loading import import_string
+from ninja_extra.security import AsyncHttpBearer
 
 
 class AsyncJWTBaseAuthentication:
