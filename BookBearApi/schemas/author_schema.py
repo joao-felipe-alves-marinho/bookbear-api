@@ -1,7 +1,6 @@
 from typing import Optional, List
 
-from ninja import FilterSchema
-from ninja_schema import ModelSchema
+from ninja import FilterSchema, ModelSchema
 from pydantic import Field
 
 from BookBearApi.models import Author
@@ -13,22 +12,22 @@ class AuthorSchema(ModelSchema):
     avatar: Optional[str] = None
     books: List['BookRelationshipSchema'] = None
 
-    class Config:
+    class Meta:
         model = Author
-        include = ['id', 'name', 'birth_date']
+        fields = ('id', 'name', 'birth_date')
 
 
 class CreateAuthorSchema(ModelSchema, UniqueNameMixin):
-    class Config:
+    class Meta:
         model = Author
-        include = ['name', 'birth_date']
+        fields = ('name', 'birth_date')
 
 
 class UpdateAuthorSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = Author
-        include = ['name', 'birth_date']
-        optional = '__all__'
+        fields = ('name', 'birth_date')
+        fields_optional = '__all__'
 
 
 class FilterAuthorSchema(FilterSchema):

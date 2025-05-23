@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.db import models
 
 
 # Create your models here.
@@ -39,7 +39,7 @@ class Book(models.Model):
 
     cover = models.ImageField(upload_to='covers', blank=True, null=True)
 
-    publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, blank=True, null=True)
+    publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, blank=True, null=True, related_name='books')
     authors = models.ManyToManyField(Author, related_name='books')
     genres = models.ManyToManyField(Genre, related_name='books')
 

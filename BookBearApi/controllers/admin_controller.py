@@ -27,10 +27,15 @@ class AdminController(ControllerBase):
         :param cover: File[UploadedFile]
         :return: BookSchema
         """
-        book = await Book.objects.acreate(cover=cover, **payload.dict(exclude_unset=True))
+        book = await Book.objects.acreate(cover=cover,
+                                          **payload.dict(exclude_unset=True, exclude={'authors', 'genres'}))
+        if payload.authors:
+            await book.authors.aadd(*payload.authors)
+        if payload.genres:
+            await book.genres.aadd(*payload.genres)
         return HTTPStatus.CREATED, book
 
-    @route.patch('/book/{book_id}', response=BookSchema)
+    @route.patch('/book/{int:book_id}', response=BookSchema)
     async def update_book(self, book_id: int, payload: UpdateBookSchema):
         """
         Update a book.
@@ -44,7 +49,7 @@ class AdminController(ControllerBase):
         await book.asave()
         return book
 
-    @route.post('/book/{book_id}', response=BookSchema)
+    @route.post('/book/{int:book_id}', response=BookSchema)
     async def upload_cover(self, book_id: int, cover: File[UploadedFile]):
         """
         Upload a cover for a book.
@@ -58,7 +63,7 @@ class AdminController(ControllerBase):
         await book.asave()
         return book
 
-    @route.delete('/book/{book_id}/cover', response=BookSchema)
+    @route.delete('/book/{int:book_id}/cover', response=BookSchema)
     async def delete_cover(self, book_id: int):
         """
         Delete a cover for a book.
@@ -71,7 +76,7 @@ class AdminController(ControllerBase):
         await book.asave()
         return book
 
-    @route.delete('/book/{book_id}', response={204: None})
+    @route.delete('/book/{int:book_id}', response={204: None})
     async def delete_book(self, book_id: int):
         """
         Delete a book.
@@ -94,7 +99,7 @@ class AdminController(ControllerBase):
         author = await Author.objects.acreate(avatar=avatar, **payload.dict(exclude_unset=True))
         return HTTPStatus.CREATED, author
 
-    @route.patch('/author/{author_id}', response=AuthorSchema)
+    @route.patch('/author/{int:author_id}', response=AuthorSchema)
     async def update_author(self, author_id: int, payload: UpdateAuthorSchema):
         """
         Update an author.
@@ -108,7 +113,7 @@ class AdminController(ControllerBase):
         await author.asave()
         return author
 
-    @route.post('/author/{author_id}', response=AuthorSchema)
+    @route.post('/author/{int:author_id}', response=AuthorSchema)
     async def upload_avatar(self, author_id: int, avatar: File[UploadedFile]):
         """
         Upload an avatar for an author.
@@ -122,7 +127,7 @@ class AdminController(ControllerBase):
         await author.asave()
         return author
 
-    @route.delete('/author/{author_id}/avatar', response=AuthorSchema)
+    @route.delete('/author/{int:author_id}/avatar', response=AuthorSchema)
     async def delete_avatar(self, author_id: int):
         """
         Delete an avatar for an author.
@@ -135,7 +140,7 @@ class AdminController(ControllerBase):
         await author.asave()
         return author
 
-    @route.delete('/author/{author_id}', response={204: None})
+    @route.delete('/author/{int:author_id}', response={204: None})
     async def delete_author(self, author_id: int):
         """
         Delete an author.
@@ -166,7 +171,7 @@ class AdminController(ControllerBase):
         publisher = await Publisher.objects.acreate(logo=logo, **payload.dict(exclude_unset=True))
         return HTTPStatus.CREATED, publisher
 
-    @route.patch('/publisher/{publisher_id}', response=PublisherSchema)
+    @route.patch('/publisher/{int:publisher_id}', response=PublisherSchema)
     async def update_publisher(self, publisher_id: int, payload: UpdatePublisherSchema):
         """
         Update a publisher.
@@ -180,7 +185,7 @@ class AdminController(ControllerBase):
         await publisher.asave()
         return publisher
 
-    @route.post('/publisher/{publisher_id}/logo', response=PublisherSchema)
+    @route.post('/publisher/{int:publisher_id}/logo', response=PublisherSchema)
     async def upload_logo(self, publisher_id: int, logo: File[UploadedFile]):
         """
         Upload a logo for a publisher.
@@ -194,7 +199,7 @@ class AdminController(ControllerBase):
         await publisher.asave()
         return publisher
 
-    @route.delete('/publisher/{publisher_id}/logo', response=PublisherSchema)
+    @route.delete('/publisher/{int:publisher_id}/logo', response=PublisherSchema)
     async def delete_logo(self, publisher_id: int):
         """
         Delete a logo for a publisher.
@@ -207,7 +212,7 @@ class AdminController(ControllerBase):
         await publisher.asave()
         return publisher
 
-    @route.delete('/publisher/{publisher_id}', response={204: None})
+    @route.delete('/publisher/{int:publisher_id}', response={204: None})
     async def delete_publisher(self, publisher_id: int):
         """
         Delete a publisher.
@@ -229,7 +234,7 @@ class AdminController(ControllerBase):
         genre = await Genre.objects.acreate(**payload.dict(exclude_unset=True))
         return HTTPStatus.CREATED, genre
 
-    @route.patch('/genre/{genre_id}', response=GenreSchema)
+    @route.patch('/genre/{int:genre_id}', response=GenreSchema)
     async def update_genre(self, genre_id: int, payload: CreateGenreSchema):
         """
         Update a genre.
@@ -243,7 +248,7 @@ class AdminController(ControllerBase):
         await genre.asave()
         return genre
 
-    @route.delete('/genre/{genre_id}', response={204: None})
+    @route.delete('/genre/{int:genre_id}', response={204: None})
     async def delete_genre(self, genre_id: int):
         """
         Delete a genre.
@@ -253,6 +258,3 @@ class AdminController(ControllerBase):
         genre = await aget_object_or_404(Genre, id=genre_id)
         await genre.adelete()
         return HTTPStatus.NO_CONTENT, None
-
-
-

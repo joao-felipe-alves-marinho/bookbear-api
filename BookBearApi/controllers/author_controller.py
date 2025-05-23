@@ -25,7 +25,7 @@ class AuthorController(ControllerBase):
         """
         return [author async for author in filters.filter(Author.objects.all())]
 
-    @route.get('/{author_id}', response=AuthorSchema)
+    @route.get('/{int:author_id}', response=AuthorSchema)
     async def get_book(self, author_id: int):
         """
         Get an author by id.

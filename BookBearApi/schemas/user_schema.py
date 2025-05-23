@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from ninja_schema import ModelSchema
+from ninja import ModelSchema
 
 from BookBearApi.models import User, UserBook
 from BookBearApi.schemas.author_schema import AuthorSchema
@@ -18,47 +18,50 @@ class UserSchema(ModelSchema):
 
     avatar: Optional[str] = None
 
-    class Config:
+    class Meta:
         model = User
-        include = ['id', 'username', 'email', 'birth_date', 'gender', 'summary']
+        fields = ('id', 'username', 'email', 'birth_date', 'gender', 'summary')
 
 
 class CreateUserSchema(ModelSchema, UniqueEmailMixin):
-    class Config:
+    class Meta:
         model = User
-        include = ['username', 'email', 'password', 'birth_date', 'gender', 'summary']
+        fields = ('username', 'email', 'password', 'birth_date', 'gender', 'summary')
+        fields_optional = ['summary']
 
 
 class UpdateUserSchema(ModelSchema, UniqueEmailMixin):
-    class Config:
+    class Meta:
         model = User
-        include = ['username', 'email', 'birth_date', 'gender', 'summary']
-        optional = '__all__'
+        fields = ('username', 'email', 'birth_date', 'gender', 'summary')
+        fields_optional = '__all__'
 
 
 class UserBookSchema(ModelSchema):
     book: BookRelationshipSchema
 
-    class Config:
+    class Meta:
         model = UserBook
-        include = ['situation', 'rating', 'review']
+        fields = ('situation', 'rating', 'review')
 
 
 class CreateUserBookSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = UserBook
-        include = ['situation', 'rating', 'review']
-        optional = ['rating', 'review']
+        fields = ('situation', 'rating', 'review')
+        fields_optional  = ['rating', 'review']
 
 
-class UpdateUserBookSchema(CreateUserBookSchema):
-    class Config(CreateUserBookSchema.Config):
-        optional = '__all__'
+class UpdateUserBookSchema(ModelSchema):
+    class Meta:
+        model = UserBook
+        fields = ('situation', 'rating', 'review')
+        fields_optional  = '__all__'
 
 
 class ReviewBookSchema(ModelSchema):
     user: UserRelationshipSchema
 
-    class Config:
+    class Meta:
         model = UserBook
-        include = ['situation', 'rating', 'review']
+        fields = ('situation', 'rating', 'review')

@@ -1,32 +1,38 @@
 from typing import List
-from ninja_schema import ModelSchema
 
-from BookBearApi.models import User, Author, Publisher, Book
+from ninja import ModelSchema
+
+from BookBearApi.models import User, Author, Publisher, Book, Genre
 
 
 class UserRelationshipSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = User
-        include = ['id', 'username']
+        fields = ('id', 'username')
 
 
 class AuthorRelationshipSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = Author
-        include = ['id', 'name']
+        fields = ('id', 'name')
 
 
 class PublisherRelationshipSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = Publisher
-        include = ['id', 'name']
+        fields = ('id', 'name')
+
+
+class GenreRelationshipSchema(ModelSchema):
+    class Meta:
+        model = Genre
+        fields = ('id', 'name')
 
 
 class BookRelationshipSchema(ModelSchema):
     publisher: PublisherRelationshipSchema = None
     authors: List[AuthorRelationshipSchema] = None
 
-    class Config:
+    class Meta:
         model = Book
-        include = ['id', 'title', 'score', 'age_rating']
-
+        fields = ('id', 'title', 'score', 'age_rating')

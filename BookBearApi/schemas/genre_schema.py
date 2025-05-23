@@ -1,7 +1,6 @@
 from typing import List, Optional
 
-from ninja import FilterSchema
-from ninja_schema import ModelSchema
+from ninja import FilterSchema, ModelSchema
 from pydantic import Field
 
 from BookBearApi.models import Genre
@@ -12,21 +11,22 @@ from BookBearApi.schemas.validators_mixin import UniqueNameMixin
 class GenreSchema(ModelSchema):
     books: List['BookRelationshipSchema'] = None
 
-    class Config:
+    class Meta:
         model = Genre
-        include = ['id', 'name']
+        fields = ('id', 'name')
 
 
 class CreateGenreSchema(ModelSchema, UniqueNameMixin):
-    class Config:
+    class Meta:
         model = Genre
+        fields = ('name',)
 
 
 class UpdateGenreSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = Genre
-        include = ['name']
-        optional = ['name']
+        fields = ('name',)
+        fields_optional = 'name'
 
 
 class FilterGenreSchema(FilterSchema):

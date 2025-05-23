@@ -25,7 +25,7 @@ class UserController(ControllerBase):
         """
         return self.context.request.user
 
-    @route.get('/{user_id}', response=UserSchema)
+    @route.get('/{int:user_id}', response=UserSchema)
     async def get_user(self, user_id: int):
         """
         Get a user by id.
@@ -79,10 +79,10 @@ class UserController(ControllerBase):
         Get the books of the current user.
         :return: List[BookRelationshipSchema]
         """
-        user = self.context.request.user.id
+        user = await aget_object_or_404(User, id=self.context.request.user.id)
         return [user_book async for user_book in user.reviewed_books.all()]
 
-    @route.post('/books/{book_id}', response=UserBookSchema)
+    @route.post('/books/{int:book_id}', response=UserBookSchema)
     async def add_user_book(self, book_id: int, payload: CreateUserBookSchema):
         """
         Add a book to the current user.
@@ -95,7 +95,7 @@ class UserController(ControllerBase):
         user_book = await UserBook.objects.acreate(user=user, book=book, **payload.dict(exclude_unset=True))
         return user_book
 
-    @route.patch('/books/{book_id}', response=UserBookSchema)
+    @route.patch('/books/{int:book_id}', response=UserBookSchema)
     async def update_user_book(self, book_id: int, payload: UpdateUserBookSchema):
         """
         Update a book of the current user.
@@ -110,7 +110,7 @@ class UserController(ControllerBase):
         await user_book.asave()
         return user_book
 
-    @route.delete('/books/{book_id}', response={204: None})
+    @route.delete('/books/{int:book_id}', response={204: None})
     async def delete_user_book(self, book_id: int):
         """
         Delete a book of the current user.
@@ -122,7 +122,7 @@ class UserController(ControllerBase):
         await user_book.adelete()
         return HTTPStatus.NO_CONTENT, None
 
-    @route.post('/genres/{genre_id}', response=UserSchema)
+    @route.post('/genres/{int:genre_id}', response=UserSchema)
     async def add_user_genre(self, genre_id: int):
         """
         Add a favorite genre to the current user.
@@ -131,10 +131,10 @@ class UserController(ControllerBase):
         """
         user = self.context.request.user
         genre = await aget_object_or_404(Genre, id=genre_id)
-        await genre.users.add(user)
+        await genre.users.aadd(user)
         return user
 
-    @route.delete('/genres/{genre_id}', response=UserSchema)
+    @route.delete('/genres/{int:genre_id}', response=UserSchema)
     async def remove_user_genre(self, genre_id: int):
         """
         Remove a favorite genre from the current user.
@@ -143,10 +143,10 @@ class UserController(ControllerBase):
         """
         user = self.context.request.user
         genre = await aget_object_or_404(Genre, id=genre_id)
-        await genre.users.remove(user)
+        await genre.users.aremove(user)
         return user
 
-    @route.post('/authors/{author_id}', response=UserSchema)
+    @route.post('/authors/{int:author_id}', response=UserSchema)
     async def add_user_author(self, author_id: int):
         """
         Follow an author.
@@ -155,10 +155,10 @@ class UserController(ControllerBase):
         """
         user = self.context.request.user
         author = await aget_object_or_404(Author, id=author_id)
-        await author.followers.add(user)
+        await author.followers.aadd(user)
         return user
 
-    @route.delete('/authors/{author_id}', response=UserSchema)
+    @route.delete('/authors/{int:author_id}', response=UserSchema)
     async def remove_user_author(self, author_id: int):
         """
         Unfollow an author.
@@ -167,10 +167,10 @@ class UserController(ControllerBase):
         """
         user = self.context.request.user
         author = await aget_object_or_404(Author, id=author_id)
-        await author.followers.remove(user)
+        await author.followers.aremove(user)
         return user
 
-    @route.post('/publishers/{publisher_id}', response=UserSchema)
+    @route.post('/publishers/{int:publisher_id}', response=UserSchema)
     async def add_user_publisher(self, publisher_id: int):
         """
         Follow a publisher.
@@ -179,10 +179,10 @@ class UserController(ControllerBase):
         """
         user = self.context.request.user
         publisher = await aget_object_or_404(Publisher, id=publisher_id)
-        await publisher.followers.add(user)
+        await publisher.followers.aadd(user)
         return user
 
-    @route.delete('/publishers/{publisher_id}', response=UserSchema)
+    @route.delete('/publishers/{int:publisher_id}', response=UserSchema)
     async def remove_user_publisher(self, publisher_id: int):
         """
         Unfollow a publisher.
@@ -191,5 +191,5 @@ class UserController(ControllerBase):
         """
         user = self.context.request.user
         publisher = await aget_object_or_404(Publisher, id=publisher_id)
-        await publisher.followers.remove(user)
+        await publisher.followers.aremove(user)
         return user

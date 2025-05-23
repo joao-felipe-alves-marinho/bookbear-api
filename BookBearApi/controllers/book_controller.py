@@ -27,7 +27,7 @@ class BookController(ControllerBase):
         """
         return [book async for book in filters.filter(Book.objects.all())]
 
-    @route.get('/{book_id}', response=BookSchema)
+    @route.get('/{int:book_id}', response=BookSchema)
     async def get_book(self, book_id: int):
         """
         Get a book by id.

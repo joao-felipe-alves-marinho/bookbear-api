@@ -1,43 +1,40 @@
 from typing import Optional, List
 
-from ninja import FilterSchema
-from ninja_schema import ModelSchema
+from ninja import FilterSchema, ModelSchema
 from pydantic import Field
 
 from BookBearApi.models import Book
 from BookBearApi.schemas.user_schema import ReviewBookSchema
-from BookBearApi.schemas.publisher_schema import PublisherSchema
-from BookBearApi.schemas.genre_schema import GenreSchema
-from BookBearApi.schemas.author_schema import AuthorSchema
+from BookBearApi.schemas.relationship_schema import AuthorRelationshipSchema, GenreRelationshipSchema, \
+    PublisherRelationshipSchema
 
 
 class BookSchema(ModelSchema):
-    authors: List[AuthorSchema] = None
-    genres: List[GenreSchema] = None
-    publisher: Optional[PublisherSchema] = None
+    authors: List[AuthorRelationshipSchema] = None
+    genres: List[GenreRelationshipSchema] = None
+    publisher: Optional[PublisherRelationshipSchema] = None
     reviews: List['ReviewBookSchema'] = None
 
     cover: Optional[str] = None
 
-    class Config:
+    class Meta:
         model = Book
-        include = ['id', 'title', 'publication_date', 'synopsis', 'score', 'age_rating', 'publisher', 'authors',
-                   'genres']
-        use_enum_values = True
+        fields = ('id', 'title', 'publication_date', 'synopsis', 'score', 'age_rating', 'publisher', 'authors',
+                  'genres')
 
 
 class CreateBookSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = Book
-        include = ['title', 'publication_date', 'synopsis', 'age_rating', 'publisher', 'authors', 'genres']
-        optional = ['synopsis', 'publisher', 'authors', 'genres']
+        fields = ('title', 'publication_date', 'synopsis', 'age_rating', 'publisher', 'authors', 'genres')
+        fields_optional = ('synopsis', 'publisher', 'authors', 'genres')
 
 
 class UpdateBookSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = Book
-        include = ['title', 'publication_date', 'synopsis', 'age_rating', 'publisher', 'authors', 'genres']
-        optional = '__all__'
+        fields = ('title', 'publication_date', 'synopsis', 'age_rating', 'publisher', 'authors', 'genres')
+        fields_optional = '__all__'
 
 
 class FilterBookSchema(FilterSchema):

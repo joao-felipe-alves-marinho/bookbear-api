@@ -1,7 +1,6 @@
 from typing import Optional, List
 
-from ninja import FilterSchema
-from ninja_schema import ModelSchema
+from ninja import FilterSchema, ModelSchema
 from pydantic import Field
 
 from BookBearApi.models import Publisher
@@ -13,22 +12,22 @@ class PublisherSchema(ModelSchema):
     logo: Optional[str] = None
     books: List['BookRelationshipSchema'] = None
 
-    class Config:
+    class Meta:
         model = Publisher
-        include = ['id', 'name']
+        fields = ('id', 'name')
 
 
 class CreatePublisherSchema(ModelSchema, UniqueNameMixin):
-    class Config:
+    class Meta:
         model = Publisher
-        include = ['name']
+        fields = ('name',)
 
 
 class UpdatePublisherSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = Publisher
-        include = ['name']
-        optional = ['name']
+        fields = ('name',)
+        fields_optional = 'name'
 
 
 class FilterPublisherSchema(FilterSchema):

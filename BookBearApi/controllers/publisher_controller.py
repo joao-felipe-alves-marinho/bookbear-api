@@ -25,7 +25,7 @@ class PublisherController(ControllerBase):
         """
         return [publisher async for publisher in filters.filter(Publisher.objects.all())]
 
-    @route.get('/{publisher_id}', response=PublisherSchema)
+    @route.get('/{int:publisher_id}', response=PublisherSchema)
     async def get_publisher(self, publisher_id: int):
         """
         Get a publisher by id.

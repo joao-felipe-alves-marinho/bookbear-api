@@ -25,7 +25,7 @@ class GenreController(ControllerBase):
         """
         return [genre async for genre in filters.filter(Genre.objects.all())]
 
-    @route.get('/{genre_id}', response=GenreSchema)
+    @route.get('/{int:genre_id}', response=GenreSchema)
     async def get_genre(self, genre_id: int):
         """
         Get a genre by id.
