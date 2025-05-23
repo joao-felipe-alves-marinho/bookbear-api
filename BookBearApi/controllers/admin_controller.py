@@ -27,12 +27,16 @@ class AdminController(ControllerBase):
         :param cover: File[UploadedFile]
         :return: BookSchema
         """
+        publisher = await aget_object_or_404(Publisher, id=payload.publisher)
         book = await Book.objects.acreate(cover=cover,
-                                          **payload.dict(exclude_unset=True, exclude={'authors', 'genres'}))
+                                          publisher=publisher,
+                                          **payload.dict(exclude_unset=True, exclude={'authors', 'genres', 'publisher'}))
         if payload.authors:
-            await book.authors.aadd(*payload.authors)
+            authors = [author async for author in Author.objects.filter(id__in=payload.authors).all()]
+            await book.authors.aadd(*authors)
         if payload.genres:
-            await book.genres.aadd(*payload.genres)
+            genres = [genre async for genre in Genre.objects.filter(id__in=payload.genres).all()]
+            await book.genres.aadd(*genres)
         return HTTPStatus.CREATED, book
 
     @route.patch('/book/{int:book_id}', response=BookSchema)

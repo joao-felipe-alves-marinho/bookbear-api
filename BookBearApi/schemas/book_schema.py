@@ -4,9 +4,9 @@ from ninja import FilterSchema, ModelSchema
 from pydantic import Field
 
 from BookBearApi.models import Book
-from BookBearApi.schemas.user_schema import ReviewBookSchema
 from BookBearApi.schemas.relationship_schema import AuthorRelationshipSchema, GenreRelationshipSchema, \
     PublisherRelationshipSchema
+from BookBearApi.schemas.user_schema import ReviewBookSchema
 
 
 class BookSchema(ModelSchema):
@@ -24,13 +24,17 @@ class BookSchema(ModelSchema):
 
 
 class CreateBookSchema(ModelSchema):
+    publisher: Optional[int] = None
+
     class Meta:
         model = Book
-        fields = ('title', 'publication_date', 'synopsis', 'age_rating', 'publisher', 'authors', 'genres')
-        fields_optional = ('synopsis', 'publisher', 'authors', 'genres')
+        fields = ('title', 'publication_date', 'synopsis', 'age_rating', 'authors', 'genres')
+        fields_optional = ('synopsis', 'authors', 'genres')
 
 
 class UpdateBookSchema(ModelSchema):
+    publisher: Optional[int] = None
+
     class Meta:
         model = Book
         fields = ('title', 'publication_date', 'synopsis', 'age_rating', 'publisher', 'authors', 'genres')
