@@ -10,12 +10,12 @@ from ninja_extra import (
 )
 
 from BookBearApi.models import Author
-from BookBearApi.schemas import AuthorSchema, FilterAuthorSchema, AsyncPageNumberPagination
+from BookBearApi.schemas import AuthorSchema, FilterAuthorSchema, AsyncPageNumberPagination, AuthorRelationshipSchema
 
 
 @api_controller('/author', tags=['author'], permissions=[permissions.AllowAny], auth=None)
 class AuthorController(ControllerBase):
-    @route.get('/', response=List[AuthorSchema])
+    @route.get('/', response=List[AuthorRelationshipSchema])
     @paginate(AsyncPageNumberPagination)
     async def get_authors(self, filters: FilterAuthorSchema = Query(...)):
         """

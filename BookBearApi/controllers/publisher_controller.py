@@ -10,12 +10,13 @@ from ninja_extra import (
 )
 
 from BookBearApi.models import Publisher
-from BookBearApi.schemas import PublisherSchema, FilterPublisherSchema, AsyncPageNumberPagination
+from BookBearApi.schemas import PublisherSchema, FilterPublisherSchema, AsyncPageNumberPagination, \
+    PublisherRelationshipSchema
 
 
 @api_controller('/publisher', tags=['publisher'], permissions=[permissions.AllowAny], auth=None)
 class PublisherController(ControllerBase):
-    @route.get('/', response=List[PublisherSchema])
+    @route.get('/', response=List[PublisherRelationshipSchema])
     @paginate(AsyncPageNumberPagination)
     async def get_publishers(self, filters: FilterPublisherSchema = Query(...)):
         """

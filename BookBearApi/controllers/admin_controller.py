@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import List
 
 from asgiref.sync import sync_to_async
 from django.shortcuts import aget_object_or_404
@@ -171,14 +170,6 @@ class AdminController(ControllerBase):
         await sync_to_async(author.avatar.delete)()
         await author.adelete()
         return HTTPStatus.NO_CONTENT, None
-
-    @route.get('/publisher', response=List[PublisherSchema])
-    async def list_publishers(self):
-        """
-        List all publishers.
-        :return: List[PublisherSchema]
-        """
-        return [publisher async for publisher in Publisher.objects.all()]
 
     @route.post('/publisher', response={201: PublisherSchema})
     async def create_publisher(self, payload: CreatePublisherSchema, logo: File[UploadedFile] = None):

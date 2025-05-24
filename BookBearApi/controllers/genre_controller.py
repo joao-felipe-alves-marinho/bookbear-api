@@ -10,12 +10,12 @@ from ninja_extra import (
 )
 
 from BookBearApi.models import Genre
-from BookBearApi.schemas import GenreSchema, FilterGenreSchema, AsyncPageNumberPagination
+from BookBearApi.schemas import GenreSchema, FilterGenreSchema, AsyncPageNumberPagination, GenreRelationshipSchema
 
 
 @api_controller('/genre', tags=['genre'], permissions=[permissions.AllowAny], auth=None)
 class GenreController(ControllerBase):
-    @route.get('/', response=List[GenreSchema])
+    @route.get('/', response=List[GenreRelationshipSchema])
     @paginate(AsyncPageNumberPagination)
     async def get_genres(self, filters: FilterGenreSchema = Query(...)):
         """

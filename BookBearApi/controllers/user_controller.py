@@ -11,12 +11,12 @@ from ninja_extra import (
 from ninja_extra.ordering import ordering, Ordering
 
 from BookBearApi.models import User
-from BookBearApi.schemas import UserSchema, FilterUserSchema, AsyncPageNumberPagination
+from BookBearApi.schemas import UserSchema, FilterUserSchema, AsyncPageNumberPagination, UserRelationshipSchema
 
 
 @api_controller('/user', tags=['user'], permissions=[permissions.AllowAny], auth=None)
 class UserController(ControllerBase):
-    @route.get('/', response=List[UserSchema])
+    @route.get('/', response=List[UserRelationshipSchema])
     @paginate(AsyncPageNumberPagination)
     @ordering(Ordering, ordering_fields=['username'])
     async def get_users(self, filters: FilterUserSchema = Query(...)):

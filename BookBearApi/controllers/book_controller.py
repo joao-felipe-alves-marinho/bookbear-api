@@ -11,12 +11,12 @@ from ninja_extra import (
 from ninja_extra.ordering import ordering, Ordering
 
 from BookBearApi.models import Book
-from BookBearApi.schemas import BookSchema, FilterBookSchema, AsyncPageNumberPagination
+from BookBearApi.schemas import BookSchema, FilterBookSchema, AsyncPageNumberPagination, BookRelationshipSchema
 
 
 @api_controller('/book', tags=['book'], permissions=[permissions.AllowAny], auth=None)
 class BookController(ControllerBase):
-    @route.get('/', response=List[BookSchema])
+    @route.get('/', response=List[BookRelationshipSchema])
     @paginate(AsyncPageNumberPagination)
     @ordering(Ordering, ordering_fields=['title', 'score'])
     async def get_books(self, filters: FilterBookSchema = Query(...)):
