@@ -49,8 +49,23 @@ class AdminController(ControllerBase):
         :return: BookSchema
         """
         book = await aget_object_or_404(Book, id=book_id)
-        for attr, value in payload.dict(exclude_unset=True).items():
+        for attr, value in payload.dict(exclude_unset=True, exclude={'authors', 'genres', 'publisher'}).items():
             setattr(book, attr, value)
+        if payload.publisher:
+            publisher = await aget_object_or_404(Publisher, id=payload.publisher)
+            book.publisher = publisher
+        if payload.authors:
+            authors = [author async for author in Author.objects.filter(id__in=payload.authors).all()]
+            await book.authors.aremove(
+                *[author async for author in book.authors.all() if author.id not in payload.authors]
+            )
+            await book.authors.aadd(*authors)
+        if payload.genres:
+            genres = [genre async for genre in Genre.objects.filter(id__in=payload.genres).all()]
+            await book.genres.aremove(
+                *[genre async for genre in book.genres.all() if genre.id not in payload.genres]
+            )
+            await book.genres.aadd(*genres)
         await book.asave()
         return book
 
