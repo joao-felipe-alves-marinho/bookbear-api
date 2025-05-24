@@ -8,19 +8,19 @@ from BookBearApi.models import User, Author, Publisher, Book, Genre
 class UserRelationshipSchema(ModelSchema):
     class Meta:
         model = User
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'avatar')
 
 
 class AuthorRelationshipSchema(ModelSchema):
     class Meta:
         model = Author
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'avatar')
 
 
 class PublisherRelationshipSchema(ModelSchema):
     class Meta:
         model = Publisher
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'logo')
 
 
 class GenreRelationshipSchema(ModelSchema):
@@ -35,4 +35,4 @@ class BookRelationshipSchema(ModelSchema):
 
     class Meta:
         model = Book
-        fields = ('id', 'title', 'score', 'age_rating')
+        fields = ('id', 'title', 'score', 'age_rating', )
