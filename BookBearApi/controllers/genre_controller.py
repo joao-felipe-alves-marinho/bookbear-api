@@ -10,8 +10,7 @@ from ninja_extra import (
 )
 
 from BookBearApi.models import Genre
-from BookBearApi.schemas import GenreSchema, FilterGenreSchema
-from BookBearApi.schemas.pagination_schema import AsyncPageNumberPagination
+from BookBearApi.schemas import GenreSchema, FilterGenreSchema, AsyncPageNumberPagination
 
 
 @api_controller('/genre', tags=['genre'], permissions=[permissions.AllowAny], auth=None)

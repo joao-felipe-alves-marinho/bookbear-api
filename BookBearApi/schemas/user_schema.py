@@ -1,6 +1,7 @@
 from typing import Optional, List
 
-from ninja import ModelSchema
+from ninja import ModelSchema, FilterSchema
+from pydantic import Field
 
 from BookBearApi.models import User, UserBook
 from BookBearApi.schemas.relationship_schema import BookRelationshipSchema, UserRelationshipSchema, \
@@ -63,3 +64,10 @@ class ReviewBookSchema(ModelSchema):
     class Meta:
         model = UserBook
         fields = ('situation', 'rating', 'review')
+
+
+class FilterUserSchema(FilterSchema):
+    username: Optional[str] = Field(
+        None, description='Filter by user name',
+        q='user__username__icontains'
+    )

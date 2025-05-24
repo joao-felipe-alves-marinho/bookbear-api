@@ -11,8 +11,7 @@ from ninja_extra import (
 from ninja_extra.ordering import ordering, Ordering
 
 from BookBearApi.models import Book
-from BookBearApi.schemas import BookSchema, FilterBookSchema
-from BookBearApi.schemas.pagination_schema import AsyncPageNumberPagination
+from BookBearApi.schemas import BookSchema, FilterBookSchema, AsyncPageNumberPagination
 
 
 @api_controller('/book', tags=['book'], permissions=[permissions.AllowAny], auth=None)

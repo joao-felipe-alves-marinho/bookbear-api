@@ -10,8 +10,7 @@ from ninja_extra import (
 )
 
 from BookBearApi.models import Author
-from BookBearApi.schemas import AuthorSchema, FilterAuthorSchema
-from BookBearApi.schemas.pagination_schema import AsyncPageNumberPagination
+from BookBearApi.schemas import AuthorSchema, FilterAuthorSchema, AsyncPageNumberPagination
 
 
 @api_controller('/author', tags=['author'], permissions=[permissions.AllowAny], auth=None)
