@@ -18,7 +18,7 @@ from BookBearApi.schemas import BookSchema, FilterBookSchema, AsyncPageNumberPag
 class BookController(ControllerBase):
     @route.get('/', response=List[BookRelationshipSchema])
     @paginate(AsyncPageNumberPagination)
-    @ordering(Ordering, ordering_fields=['title', 'score'])
+    @ordering(Ordering, ordering_fields=['id', 'title', 'score'])
     async def get_books(self, filters: FilterBookSchema = Query(...)):
         """
         Get a list of books.

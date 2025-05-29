@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from ninja import ModelSchema
 
@@ -30,7 +30,7 @@ class GenreRelationshipSchema(ModelSchema):
 
 
 class BookRelationshipSchema(ModelSchema):
-    publisher: PublisherRelationshipSchema = None
+    publisher: Optional[PublisherRelationshipSchema] = None
     authors: List[AuthorRelationshipSchema] = None
 
     class Meta:

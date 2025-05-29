@@ -19,7 +19,7 @@ class UserSchema(ModelSchema):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'birth_date', 'gender', 'summary')
+        fields = ('id', 'username', 'email', 'birth_date', 'gender', 'summary', 'is_superuser')
 
 
 class CreateUserSchema(ModelSchema, UniqueEmailMixin):

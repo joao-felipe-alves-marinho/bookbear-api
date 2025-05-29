@@ -15,11 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 # from django.contrib import admin
-from django.urls import path
+from urllib.parse import urlparse
+
+from django.conf import settings
+from django.urls import path, re_path
+from django.views.static import serve
 
 from BookBearApi.api import api
 
+media_path = urlparse(settings.MEDIA_URL).path  # e.g. "/media/"
+
 urlpatterns = [
-    #    path('admin/', admin.site.urls),
     path('api/v1/', api.urls),
+    re_path(r'^{}(?P<path>.*)$'.format(media_path.lstrip('/')), serve, {
+        'document_root': settings.MEDIA_ROOT,
+    }),
 ]
