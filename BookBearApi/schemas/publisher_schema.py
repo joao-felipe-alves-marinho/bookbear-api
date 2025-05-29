@@ -33,5 +33,5 @@ class UpdatePublisherSchema(ModelSchema):
 class FilterPublisherSchema(FilterSchema):
     name: Optional[str] = Field(
         None, description='Filter by publishers name',
-        q='publisher__name__icontains'
+        q='name__icontains'
     )

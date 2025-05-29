@@ -35,4 +35,4 @@ class BookRelationshipSchema(ModelSchema):
 
     class Meta:
         model = Book
-        fields = ('id', 'title', 'score', 'age_rating', )
+        fields = ('id', 'title', 'score', 'age_rating', 'cover')

@@ -32,5 +32,5 @@ class UpdateGenreSchema(ModelSchema):
 class FilterGenreSchema(FilterSchema):
     name: Optional[str] = Field(
         None, description='Filter by genres name',
-        q='genre__name__icontains'
+        q='name__icontains'
     )

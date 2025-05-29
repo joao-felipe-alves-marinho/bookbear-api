@@ -69,5 +69,5 @@ class ReviewBookSchema(ModelSchema):
 class FilterUserSchema(FilterSchema):
     username: Optional[str] = Field(
         None, description='Filter by user name',
-        q='user__username__icontains'
+        q='username__icontains'
     )

@@ -33,5 +33,5 @@ class UpdateAuthorSchema(ModelSchema):
 class FilterAuthorSchema(FilterSchema):
     name: Optional[str] = Field(
         None, description='Filter by authors name',
-        q='author__name__icontains'
+        q='name__icontains'
     )
