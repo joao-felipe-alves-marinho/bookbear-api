@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 from asgiref.sync import sync_to_async
+from django.db import IntegrityError
 from django.shortcuts import aget_object_or_404
 from ninja import File
 from ninja.files import UploadedFile
@@ -9,6 +10,8 @@ from ninja_extra import (
     ControllerBase,
     permissions, route
 )
+
+from ..exceptions import NameAlreadyExistsException
 
 from BookBearApi.models import Book, Genre, Author, Publisher
 from BookBearApi.schemas import BookSchema, CreateBookSchema, AuthorSchema, CreateAuthorSchema, \
@@ -115,7 +118,10 @@ class AdminController(ControllerBase):
         :param avatar: File[UploadedFile]
         :return: AuthorSchema
         """
-        author = await Author.objects.acreate(avatar=avatar, **payload.dict(exclude_unset=True))
+        try:
+            author = await Author.objects.acreate(avatar=avatar, **payload.dict(exclude_unset=True))
+        except IntegrityError:
+            raise NameAlreadyExistsException(detail=f"Author with name '{payload.name}' already exists.")
         return HTTPStatus.CREATED, author
 
     @route.patch('/author/{int:author_id}', response=AuthorSchema)
@@ -179,7 +185,10 @@ class AdminController(ControllerBase):
         :param logo: File[UploadedFile]
         :return: PublisherSchema
         """
-        publisher = await Publisher.objects.acreate(logo=logo, **payload.dict(exclude_unset=True))
+        try:
+            publisher = await Publisher.objects.acreate(logo=logo, **payload.dict(exclude_unset=True))
+        except IntegrityError:
+            raise NameAlreadyExistsException(detail=f"Publisher with name '{payload.name}' already exists.")
         return HTTPStatus.CREATED, publisher
 
     @route.patch('/publisher/{int:publisher_id}', response=PublisherSchema)
@@ -242,7 +251,10 @@ class AdminController(ControllerBase):
         :param payload: GenreSchema
         :return: GenreSchema
         """
-        genre = await Genre.objects.acreate(**payload.dict(exclude_unset=True))
+        try:
+            genre = await Genre.objects.acreate(**payload.dict(exclude_unset=True))
+        except IntegrityError:
+            raise NameAlreadyExistsException(detail=f"Genre with name '{payload.name}' already exists.")
         return HTTPStatus.CREATED, genre
 
     @route.patch('/genre/{int:genre_id}', response=GenreSchema)

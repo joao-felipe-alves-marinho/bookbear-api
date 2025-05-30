@@ -6,6 +6,7 @@ from dj_ninja_auth import app_settings
 from dj_ninja_auth.jwt.schema_control import JWTSchemaControl
 from dj_ninja_auth.jwt.tokens import RefreshToken
 from dj_ninja_auth.schema_control import SchemaControl
+from django.db import IntegrityError
 from django.conf import settings
 from django.contrib.auth import alogin as django_alogin
 from django.contrib.auth import alogout as django_alogout
@@ -15,6 +16,8 @@ from ninja.files import UploadedFile
 from ninja_extra import ControllerBase, api_controller, http_post, http_generic, route
 from ninja_extra.exceptions import APIException
 from ninja_extra.permissions import AllowAny, IsAuthenticated
+
+from ..exceptions import EmailAlreadyExistsException
 
 from BookBearApi.models import User
 from BookBearApi.schemas import TokenRefreshOutputCookieSchema, UserSchema, CreateUserSchema
@@ -244,10 +247,13 @@ class AsyncNinjaAuthJWTController(
 
     @route.post('/register', response={201: UserSchema}, auth=None)
     async def register(self, payload: CreateUserSchema, avatar: File[UploadedFile] = None):
-        user = await sync_to_async(User.objects.create_user)(
-            avatar=avatar,
-            **payload.dict(exclude_unset=True)
-        )
+        try:
+            user = await sync_to_async(User.objects.create_user)(
+                avatar=avatar,
+                **payload.dict(exclude_unset=True)
+            )
+        except IntegrityError:
+            raise EmailAlreadyExistsException()
         return HTTPStatus.CREATED, user
 
 
